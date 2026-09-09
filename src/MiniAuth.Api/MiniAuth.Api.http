@@ -1,0 +1,6 @@
+@MiniAuth.Api_HostAddress = http://localhost:5048
+
+GET {{MiniAuth.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

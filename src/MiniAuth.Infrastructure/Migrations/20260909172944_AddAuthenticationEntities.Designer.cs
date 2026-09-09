@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MiniAuth.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using MiniAuth.Infrastructure.Persistence;
 namespace MiniAuth.Infrastructure.Migrations
 {
     [DbContext(typeof(MiniAuthDbContext))]
-    partial class MiniAuthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260909172944_AddAuthenticationEntities")]
+    partial class AddAuthenticationEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,18 +75,6 @@ namespace MiniAuth.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Name = "User"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
-                            Name = "Admin"
-                        });
                 });
 
             modelBuilder.Entity("MiniAuth.Domain.Entities.User", b =>

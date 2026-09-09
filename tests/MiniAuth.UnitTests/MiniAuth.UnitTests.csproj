@@ -18,4 +18,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MiniAuth.Application\MiniAuth.Application.csproj" />
+    <ProjectReference Include="..\..\src\MiniAuth.Domain\MiniAuth.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

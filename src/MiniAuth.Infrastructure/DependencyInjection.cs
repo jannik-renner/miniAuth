@@ -2,6 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MiniAuth.Infrastructure.Persistence;
+using MiniAuth.Application.Abstractions;
+using MiniAuth.Infrastructure.Persistence.Repositories;
+using MiniAuth.Infrastructure.Security;
 
 namespace MiniAuth.Infrastructure
 {
@@ -14,6 +17,11 @@ namespace MiniAuth.Infrastructure
                     configuration.GetConnectionString("DefaultConnection")
                 )
             );
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             return services;
         }

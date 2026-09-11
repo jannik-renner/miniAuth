@@ -1,19 +1,18 @@
-﻿using MiniAuth.Application.Abstractions;
-using MiniAuth.Domain.Entities;
+﻿using MediatR;
+using MiniAuth.Application.Abstractions;
 using MiniAuth.Application.Common.Exceptions;
+using MiniAuth.Domain.Entities;
 
 namespace MiniAuth.Application.Auth.Register
 {
-    public class RegisterUserService
+    public sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, RegisterUserResponse>
     {
-        private const string ROLE_USER = "User";
-
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterUserService(IUserRepository userRepository, IRoleRepository roleRepository, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork)
+        public RegisterUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
@@ -21,7 +20,7 @@ namespace MiniAuth.Application.Auth.Register
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, CancellationToken cancellationToken = default)
+        public async Task<RegisterUserResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
             var email = request.Email.Trim().ToLowerInvariant();
 
@@ -36,7 +35,7 @@ namespace MiniAuth.Application.Auth.Register
 
             var user = new User(email, passwordHash);
 
-            var role = await _roleRepository.GetByNameAsync(ROLE_USER, cancellationToken);
+            var role = await _roleRepository.GetByNameAsync("User", cancellationToken);
 
             if (role == null)
             {

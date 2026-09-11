@@ -8,9 +8,13 @@ namespace MiniAuth.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddValidatorsFromAssemblyContaining<RegisterUserRequestValidator>();
+            services.AddMediatR(configuration =>
+            {
+                configuration.RegisterServicesFromAssembly(
+                    typeof(DependencyInjection).Assembly);
+            });
 
-            services.AddScoped<RegisterUserService>();
+            services.AddValidatorsFromAssemblyContaining<RegisterUserRequestValidator>();
 
             return services;
         }

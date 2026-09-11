@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MiniAuth.Application.Auth.Register;
-using MiniAuth.Application.Common.Exceptions;
 
 namespace MiniAuth.Api.Controller
 {
@@ -9,40 +9,29 @@ namespace MiniAuth.Api.Controller
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly RegisterUserService _registerUserService;
+        private readonly ISender _sender;
         private readonly IValidator<RegisterUserRequest> _validator;
 
-        public AuthController(RegisterUserService registerUserService, IValidator<RegisterUserRequest> validator)
+        public AuthController(ISender sender, IValidator<RegisterUserRequest> validator)
         {
-            _registerUserService = registerUserService;
+            _sender = sender;
             _validator = validator;
         }
 
         [HttpPost("register")]
         public async Task<ActionResult<RegisterUserResponse>> Register(RegisterUserRequest request, CancellationToken cancellationToken)
         {
-            try
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
             {
-                var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-                if (!validationResult.IsValid)
-                {
-                    return BadRequest(validationResult.Errors);
-                }
+                return BadRequest(validationResult.Errors);
+            }
 
-                var result = await _registerUserService.RegisterAsync(request, cancellationToken);
-                return Created($"/api/users/{result.UserId}", result);
-            }
-            catch (ConflictException ex)
-            {
-                return Conflict(new
-                {
-                    message = ex.Message
-                });
-            }
-            catch(Exception ex)
-            {
-                throw;
-            }
+            var command = new RegisterUserCommand(request.Email, request.Password);
+
+            var result = await _sender.Send(command, cancellationToken);
+
+            return Created($"/api/users/{result.UserId}", result);
         }
     }
 }

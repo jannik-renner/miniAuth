@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using MiniAuth.Application.Auth.Register;
+using MiniAuth.Application.Common.Behaviours;
 
 namespace MiniAuth.Application
 {
@@ -10,11 +10,12 @@ namespace MiniAuth.Application
         {
             services.AddMediatR(configuration =>
             {
-                configuration.RegisterServicesFromAssembly(
-                    typeof(DependencyInjection).Assembly);
+                configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+
+                configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
 
-            services.AddValidatorsFromAssemblyContaining<RegisterUserRequestValidator>();
+            services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
             return services;
         }

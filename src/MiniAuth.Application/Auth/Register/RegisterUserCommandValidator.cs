@@ -2,9 +2,9 @@
 
 namespace MiniAuth.Application.Auth.Register
 {
-    public class RegisterUserRequestValidator : AbstractValidator<RegisterUserRequest>
+    public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
     {
-        public RegisterUserRequestValidator()
+        public RegisterUserCommandValidator()
         {
             RuleFor(x => x.Email)
                 .NotEmpty()

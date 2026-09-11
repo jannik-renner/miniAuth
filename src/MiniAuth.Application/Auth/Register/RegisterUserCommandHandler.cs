@@ -35,7 +35,7 @@ namespace MiniAuth.Application.Auth.Register
 
             var user = new User(email, passwordHash);
 
-            var role = await _roleRepository.GetByNameAsync("User", cancellationToken);
+            var role = await _roleRepository.GetByNameAsync(User.ROLE_USER, cancellationToken);
 
             if (role == null)
             {

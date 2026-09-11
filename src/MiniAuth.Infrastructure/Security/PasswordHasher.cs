@@ -16,8 +16,7 @@ namespace MiniAuth.Infrastructure.Security
         {
             var result = _hasher.VerifyHashedPassword(null!, passwordHash, password);
 
-            return result == PasswordVerificationResult.Success ||
-                   result == PasswordVerificationResult.SuccessRehashNeeded;
+            return result == PasswordVerificationResult.Success || result == PasswordVerificationResult.SuccessRehashNeeded;
         }
     }
 }
